@@ -1,9 +1,10 @@
 
-clear;clc;
+% clear;clc;
 tic
-global omega_c phi_mr tau k;
-omega_c=2.51;
-phi_mr=83.9;
+% global omega_c phi_mr;
+global tau k;
+% omega_c=2.51;
+% phi_mr=83.9;
 
 % k_p=x(1);
 % k_i=x(2);
@@ -16,6 +17,7 @@ A=[];b=[];Aeq=[];beq=[];
 lb=[2.6,0,0,0,0.5];
 ub=[5,5,5,2,1.5];
 ConstraintFunction = @simple_constraint;
+global x
 x = patternsearch(ObjectiveFunction,x0,A,b,Aeq,beq,lb,ub, ...
     ConstraintFunction);
 disp('% k_p=x(1); k_i=x(2); k_d=x(3); lambda=x(4); mu=x(5);')
@@ -33,8 +35,9 @@ disp(ceq);
 disp('Plotting Bode plot:');
 k_p=x(1); k_i=x(2); k_d=x(3); lambda=x(4); mu=x(5);
 %k_p depends on k_i, k_d and 
-k = 1.02;
-tau = 0.179;
+global K T1
+k = K;
+tau = T1;
 
 disp('Calculating FOPID open-loop transfer function');
 s=fotf('s');
@@ -43,7 +46,9 @@ p_tf=k/(tau*s+1)/s;
 sys_tf=c_tf*p_tf;
 %
 disp('Calculating IOPID open-loop transfer function');
-ioKp = 1.95;ioKi = 0.369;ioKd = 1.48;%dynamic computing in futher
+global iokp ioki iokd
+ioKp = iokp;ioKi = ioki;ioKd = iokd;
+% ioKp = 1.95;ioKi = 0.369;ioKd = 1.48;%dynamic computing in futher
 ioc_tf=ioKp+ioKi/s+ioKd*s;
 p_tf=k/(tau*s+1)/s;
 iosys_tf=ioc_tf*p_tf;
