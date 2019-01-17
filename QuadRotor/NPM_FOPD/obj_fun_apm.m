@@ -1,65 +1,40 @@
-function [obj] = obj_fun_apm(x)
+function [APM] = obj_fun_apm(x)
 
-k_p=x(1);
-k_i=x(2);
-k_d=x(3);
-lambda=x(4);
-mu=x(5);
+% Objective function based on area phase margin
+% Constants: tau, k, kp, omega_c
+% Inputs: lambda, kd
+% Outputs: obj=area phase margin
+% Demo:
+%  obj_fun_apm([-0.9694 0.6192])
+%  kp = 2.6992;
+lambda=x(1);kd=x(2);
 
+%% Step one: Preparing necessary data
+% Plant parameters
+global K T1
+K = 1.0263;
+T1 = 0.71;
+tau=T1;k=K;
 
-global omega_c phi_mr; %preset parameters in main
+% Controller design specifications
+global wc phi_m
+% wc = 2.51; %crossover frequency
+% phi_m=83.9;
 
-delta=0.5;
-omega_c_minus=omega_c*(1-delta);
-omega_c_plus=omega_c*(1+delta);
+%% Step two: Calculate area phase margin to build the objective function
+w=wc;
+APM1 = atan2(kd*w^lambda*sin(pi*lambda/2),(1+kd*w^lambda*cos(pi*lambda/2)))...
+    +atan2(1,T1*w);
+w=wc*1.5;
+APM2 = atan2(kd*w^lambda*sin(pi*lambda/2),(1+kd*w^lambda*cos(pi*lambda/2)))...
+    +atan2(1,T1*w);
+w=wc*0.5;
+APM3 = atan2(kd*w^lambda*sin(pi*lambda/2),(1+kd*w^lambda*cos(pi*lambda/2)))...
+    +atan2(1,T1*w);
 
+% APM = abs(phi_m-APM1/pi*180)+abs(phi_m-APM2/pi*180)+abs(phi_m-APM3/pi*180);
+APM = 10^2*abs(phi_m-APM1/pi*180)-APM2/pi*180-APM3/pi*180;
+% to get the min value max, so we use a negative symbol.
 
-
-%% 
-
-k = 1.0263;
-tau = 0.71;
-
-% disp('Calculating FOPID open-loop transfer function');
-s=fotf('s');
-c_tf=k_p + k_i/s^lambda + k_d*(s^mu);%Test
-p_tf=k/(tau*s+1)/s;
-sys_tf=c_tf*p_tf;
-% [Gm,Pm,Wcg,Wcp] = margin(sys_tf)
-%% 
-% if nargin==1, w=logspace(-4,4); end
-% w=omega_c_minus;
-% j=sqrt(-1); H1=freqresp(j*w,sys_tf); H1=frd(H1,w);
-% [mag,phase,wout]=bode(H1,w)
-%% 
-
-%parallel computing
-% EE=k_d*omega_c^mu*sin(pi*mu/2) - k_i*omega_c^(-lambda)*sin(pi*lambda/2);
-% FF=k_p + k_i*omega_c^(-lambda)*cos(pi*lambda/2) + k_d*omega_c^mu*cos(pi*mu/2);
-% phi_m=pi + atan(EE/FF) + atan(1/omega_c/pi);
-w=omega_c;
-j=sqrt(-1); H1=freqresp(j*w,sys_tf); H1=frd(H1,w);
-[mag,phase,wout]=bode(H1,w);
-phi_m=180-phase;
-
-% AA=k_d * omega_c_minus^mu * sin(pi*mu/2) - k_i*omega_c_minus^(-lambda)*sin(pi*lambda/2);
-% BB=k_p + k_i*omega_c_minus^(-lambda)*cos(pi*lambda/2) + k_d*omega_c_minus^mu*cos(pi*mu/2);
-% phi_m_minus= pi + atan(AA/BB) + atan(1/(pi*omega_c_minus));
-w=omega_c_minus;
-j=sqrt(-1); H1=freqresp(j*w,sys_tf); H1=frd(H1,w);
-[mag,phase,wout]=bode(H1,w);
-phi_m_minus=180-phase;
-
-% CC=k_d * omega_c_plus^mu * sin(pi*mu/2) - k_i*omega_c_plus^(-lambda)*sin(pi*lambda/2);
-% DD=k_p + k_i*omega_c_plus^(-lambda)*cos(pi*lambda/2) + k_d*omega_c_plus^mu*cos(pi*mu/2);
-% phi_m_plus= pi + atan(CC/DD) + atan(1/(pi*omega_c_plus));
-w=omega_c_plus;
-j=sqrt(-1); H1=freqresp(j*w,sys_tf); H1=frd(H1,w);
-[mag,phase,wout]=bode(H1,w);
-phi_m_plus=180-phase;
-
-M1=100;
-
-obj = M1 * abs(phi_mr-phi_m) - phi_m_minus - phi_m_plus;
 end
 

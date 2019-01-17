@@ -12,8 +12,8 @@ lambda=x(1);kd=x(2);
 %% Step one: Preparing necessary data
 % Plant parameters
 global K T1
-K = 1.0263;
-T1 = 0.71;
+% K = 1.0263;
+% T1 = 0.71;
 tau=T1;k=K;
 
 % Controller design specifications
