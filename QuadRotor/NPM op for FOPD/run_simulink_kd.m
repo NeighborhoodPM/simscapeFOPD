@@ -16,16 +16,17 @@ assignin('base','tau',T1);
 assignin('base','k',K);
 k=K;tau=T1;
 
-[t_time,x_state,y_out]=sim('model.slx',[0,10]);
+[t_time,x_state,y_out]=sim('model.slx',[0,20]);
 %% draw step response comparison
 figure(3)
-plot(FOPD.Time,FOPD.Data,'-',IOPID.Time,IOPID.Data,'--')
-legend('FOPD','IOPID')
+h=plot(FOPD.Time,FOPD.Data,'-',IOPID.Time,IOPID.Data,'--');
+% legend('FOPD','IOPID')
+legend(h,['FOPD: K=' num2str(K)],['IOPID: K=' num2str(K) ', I=' num2str(ioki)])
 %%
-% kp=Kp;
-% kd=Kd;
-% lamda=Lambda;
-
+% % kp=Kp;
+% % kd=Kd;
+% % lamda=Lambda;
+% 
 % s=fotf('s');
 % c_tf=kp*(1+kd*(s^lamda));
 % p_tf=k/(tau*s+1)/s;
@@ -43,4 +44,4 @@ legend('FOPD','IOPID')
 % bode(iosys_tf);
 % 
 % lgd=legend('FOPD','IOPID');
-% hold off
+% % hold off
