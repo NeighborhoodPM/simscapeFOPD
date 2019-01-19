@@ -12,7 +12,7 @@ p_tf=K/(T1*s+1)/s;
 
 %% tune
 opts = pidtuneOptions('CrossoverFrequency',wc,'PhaseMargin',phi);
-[C, info] = pidtune(p_tf, 'pid', opts)
+[C, info] = pidtune(p_tf, 'pd', opts)
 iokp = C.Kp;
 ioki = C.Ki;
 iokd = C.Kd;
