@@ -1,6 +1,8 @@
 # simscapeFOPD
 Simscape drone altitude control with fractional order proportional derivate controller
-Note that: This work has been merged to https://github.com/Fractional-order-controller/FOFC_Benchmark
+
+# Note that
+This work has been merged to https://github.com/Fractional-order-controller/FOFC_Benchmark
 
 ## Forked from:
 
