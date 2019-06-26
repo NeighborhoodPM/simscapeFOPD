@@ -1,10 +1,11 @@
 # Note that 
 This work has been merged into: https://github.com/Fractional-order-controller/FOFC_Benchmark
 
-# Getting started:
-~~* Run "run_patternsearch_apm.m";~~
-~~* Run "run_simulink_kd.m".~~
+# Getting started
 * Run "main.mlapp".
+
+# Video demo
+https://youtu.be/LrsQg9RVens
 
 # Citation
 Bo Shang, Chengdong Wu, YangQuan Chen. Neighborhood optimization method for shaping Bode plot with larger phase margin [C]. The 2019 Symposium on Small Unmanned Aerial Vehicle Technologies and Applications (SUAVTA), 2019 (accepted).
